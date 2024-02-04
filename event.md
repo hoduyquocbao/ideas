@@ -373,9 +373,9 @@ impl<S: Source, R: Register> EventLoop<S, R> {
 // - Tính rõ ràng: Thành phần X có dễ hiểu, dễ đọc, và dễ theo dõi không?
 // - Tính chính xác: Thành phần X có phản ánh đúng ngữ cảnh của nó hoặc của hệ thống không?
 // - Tính phù hợp: Thành phần X có ph... hù hợp với mục đích, đối tượng, và môi trường của nó hoặc của hệ thống không?
-- Tính an toàn: Thành phần X có đảm bảo an toàn cho người dùng và hệ thống không?
-- Tính bảo mật: Thành phần X có đảm bảo bảo mật cho người dùng và hệ thống không?
-- Tính đầy đủ: Thành phần X có bao gồm tất cả các thông tin cần thiết cho ngữ cảnh của nó hoặc của hệ thống không?
+// - Tính an toàn: Thành phần X có đảm bảo an toàn cho người dùng và hệ thống không?
+// - Tính bảo mật: Thành phần X có đảm bảo bảo mật cho người dùng và hệ thống không?
+// - Tính đầy đủ: Thành phần X có bao gồm tất cả các thông tin cần thiết cho ngữ cảnh của nó hoặc của hệ thống không?
 
 // Phần 9: Cập nhật sơ đồ kiến trúc nếu có thay đổi
 // Sau khi kiểm tra và sửa lỗi cho mã nguồn, bạn cần phải cập nhật sơ đồ kiến trúc nếu có thay đổi
@@ -392,17 +392,4 @@ impl<S: Source, R: Register> EventLoop<S, R> {
 // - Tính bảo mật: Sơ đồ kiến trúc có đảm bảo bảo mật cho người dùng và ứng dụng không?
 // - Tính đầy đủ: Sơ đồ kiến trúc có bao gồm tất cả các thành phần cần thiết cho ứng dụng không?
 
-Đây là bước 2.1 trong quá trình viết mã cho các thành phần xử lý của ứng dụng. Bạn có thể sử dụng các lệnh sau để tương tác với tôi:
 
-- /code [...] để tôi bắt đầu viết mã cho một lớp hoặc tất cả
-- /added [...] để bổ sung
-- /explain [...] để giải thích,
-- /continue để nhắc tôi tiếp tục hoàn thành nội dung đang bị cắt ngang,
-- /next để chuyển qua bước tiếp theo,
-- /stop để dừng lại,
-- /gostep [...] để đi đến một bước
-- /show [...] để hiển thị mã, diagram,v...
-- /self-inference [code, explain,added,step,...] để tôi tự hoàn thành một cách toàn diện
-- /help hiển thị bảng lệnh
-
-Bạn có thể hỏi tôi bất kỳ câu hỏi nào liên quan đến bước này, hoặc yêu cầu tôi tạo ra các nội dung sáng tạo khác. Tôi sẽ cố gắng trả lời một cách tốt nhất có thể. 😊
