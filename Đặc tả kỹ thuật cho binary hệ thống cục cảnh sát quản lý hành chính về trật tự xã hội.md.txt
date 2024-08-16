@@ -1,0 +1,1013 @@
+Dưới đây là đặc tả kỹ thuật hoàn chỉnh cho hệ thống binary của Cục Cảnh sát quản lý hành chính về trật tự xã hội, bao gồm mã nguồn và sơ đồ tuần tự hóa. Nội dung này được định dạng dưới dạng markdown để **GPT Principal Staff Engineer** có thể nắm bắt toàn diện về hệ thống và đưa ra các prompts chính xác cho **GPT-4o** nhằm cải tiến mã một cách chính xác và an toàn hơn.
+
+```markdown
+# Đặc tả kỹ thuật hệ thống binary của Cục Cảnh sát quản lý hành chính về trật tự xã hội
+
+## I. Giới thiệu
+
+Hệ thống binary này được thiết kế để quản lý thông tin công dân và hồ sơ hành chính cho Cục Cảnh sát quản lý hành chính về trật tự xã hội. Hệ thống tập trung vào các yêu cầu bảo mật nghiêm ngặt, quản lý phân quyền chặt chẽ, ghi log toàn diện và đảm bảo tính khả thi và mở rộng cho tương lai.
+
+## II. Cấu trúc và thành phần hệ thống
+
+### 1. Định nghĩa các cấu trúc
+
+```rust
+// Enum để quản lý trạng thái của Record và Citizen
+enum Status {
+    Active,
+    Inactive,
+    Pending,
+    Approved,
+    Rejected,
+}
+
+// Struct đại diện cho công dân trong hệ thống
+struct Citizen {
+    id: u64,
+    name: String,
+    age: u8,
+    address: String,
+    record: Option<Record>,  // Hồ sơ của công dân có thể là None nếu chưa có hoặc Optional
+}
+
+// Struct đại diện cho hồ sơ của công dân
+struct Record {
+    record_id: u64,
+    details: String,
+    status: Status,  // Trạng thái của hồ sơ
+}
+
+// Struct Audit để quản lý lịch sử hành động
+struct Audit {
+    action: String,
+    timestamp: u64,
+    user_id: u64,
+}
+
+// Struct quản lý quy trình công việc
+struct Agent;
+
+// Struct đại diện cho yêu cầu trong hệ thống
+struct Request {
+    id: u64,
+    data: Vec<u8>,
+}
+
+// Struct đại diện cho một sự kiện trong hệ thống
+struct Event<T> {
+    id: u64,
+    payload: T,
+}
+
+// Struct đại diện cho cơ sở dữ liệu
+struct Database {
+    id: u64,
+    data: Vec<u8>,
+}
+
+// Struct đại diện cho hệ thống thông báo
+struct Notification;
+
+// Struct đại diện cho các vai trò khác nhau
+struct Chief {
+    id: u64,
+    name: String,
+}
+
+struct Deputy {
+    id: u64,
+    name: String,
+}
+
+struct Head {
+    id: u64,
+    name: String,
+}
+
+struct Assistant {
+    id: u64,
+    name: String,
+}
+
+struct Officer {
+    id: u64,
+    name: String,
+    department: String,
+}
+
+struct Task {
+    id: u64,
+    action: String,
+}
+
+struct Workflow {
+    id: u64,
+    tasks: Vec<Task>,
+}
+```
+
+### 2. Định nghĩa các trait
+
+```rust
+// Các trait định nghĩa các hành vi và chức năng trong hệ thống
+trait Loggable {
+    fn log(&self, message: &str);
+}
+
+trait Validatable {
+    fn validate(&self) -> bool;
+}
+
+trait Deduplicatable {
+    fn deduplicate(&self) -> Self;
+}
+
+trait Sanitizable {
+    fn sanitize(&self) -> Self;
+}
+
+trait Authenticatable {
+    fn authenticate(&self, credentials: &str) -> bool;
+    fn generate_otp(&self) -> String; // Xác thực hai bước
+}
+
+trait Prioritizable {
+    fn prioritize(&self, level: u8);
+}
+
+trait Filterable {
+    fn filter(&self, criteria: &str) -> Self;
+}
+
+trait Searchable {
+    fn search(&self, query: &str) -> Vec<Self>
+    where
+        Self: Sized;
+}
+
+trait Indexable {
+    fn index(&self) -> usize;
+}
+
+// Cặp trait Serializable và Deserializable
+trait Serializable {
+    fn serialize(&self) -> Vec<u8>;
+}
+
+trait Deserializable {
+    fn deserialize(data: &[u8]) -> Self;
+}
+
+// Cặp trait Encryptable và Decryptable
+trait Encryptable {
+    fn encrypt(&self) -> Vec<u8>;
+}
+
+trait Decryptable {
+    fn decrypt(&self, data: &[u8]) -> Vec<u8>;
+}
+
+// Cặp trait Compressable và Decompressable
+trait Compressable {
+    fn compress(&self) -> Vec<u8>;
+}
+
+trait Decompressable {
+    fn decompress(&self, data: &[u8]) -> Vec<u8>;
+}
+
+trait Cachable {
+    fn cache(&self);
+}
+
+trait Trackable {
+    fn track(&self);
+}
+
+trait Throttlable {
+    fn throttle(&self);
+}
+
+trait Scalable {
+    fn scale(&self, factor: u32);
+}
+
+trait Observable {
+    fn observe(&self);
+}
+
+trait Timeoutable {
+    fn set_timeout(&self, duration: u64);
+}
+
+trait Reversible {
+    fn reverse(&self) -> Self;
+}
+
+trait Recoverable {
+    fn recover(&self) -> Self;
+}
+
+trait Persistable {
+    fn persist(&self);
+}
+
+trait Eventable<T> {
+    fn register_event(&self, event: T);
+}
+
+trait Auditable {
+    fn audit(&self);
+}
+
+trait Configurable {
+    fn configure(&self, options: &str);
+}
+
+trait Extendable {
+    fn extend(&self);
+}
+
+trait Aggregatable {
+    fn aggregate(&self, other: &Self) -> Self;
+}
+
+trait Customizable {
+    fn customize(&self, options: &str);
+}
+
+trait Modularizable {
+    fn organize_modules(&self);
+}
+
+trait Governable {
+    fn enforce_policies(&self);
+}
+
+trait Isolatable {
+    fn isolate(&self);
+}
+
+trait Traceable {
+    fn trace(&self);
+}
+
+trait Notifiable {
+    fn notify(&self);
+}
+
+trait Schedulable {
+    fn schedule(&self, time: u64);
+}
+
+trait Redactable {
+    fn redact(&self);
+}
+
+trait Notarizable {
+    fn notarize(&self);
+}
+
+trait Verifiable {
+    fn re_verify(&self) -> bool;
+}
+
+trait Archivable {
+    fn archive(&self);
+}
+
+trait Attachable {
+    fn attach(&self, data: &str);
+}
+
+trait Visualizable {
+    fn visualize(&self) -> String;
+}
+
+trait Replicable {
+    fn replicate(&self) -> Self;
+}
+
+trait Expandable {
+    fn expand(&self);
+}
+
+trait Manageable {
+    fn approve(&self, request: &Request) -> bool;
+    fn amend(&self, record_id: u64, changes: &str);
+    fn issue(&self, details: &str);
+    fn reissue(&self, document_id: u64);
+}
+
+trait Grantable {
+    fn grant(&self, officer_id: u64, access_level: u8);
+    fn edit(&self, officer_id: u64, new_role: &str);
+}
+
+trait Investigable {
+    fn log_event(&self, event_details: &str);
+    fn search(&self, query: &str) -> Vec<String>;
+    fn manage_event(&self, investigation_details: &str);
+}
+
+trait Monitorable {
+    fn monitor_logs(&self);
+    fn verify_changes(&self);
+    fn track_tasks(&self);
+    fn review_logs(&self);
+    fn alert_admin(&self, issue: &str);
+}
+```
+
+## III. Triển khai các trait
+
+### 1. Triển khai cho `Citizen`
+
+```rust
+impl Encryptable for Citizen {
+    fn encrypt(&self) -> Vec<u8> {
+        println!("Encrypting data for Citizen ID: {}", self.id);
+        // Mã hóa dữ liệu với khóa bảo mật mạnh
+        let encrypted_data = base64::encode(&self.name) + "SECRET_KEY";
+        encrypted_data.as_bytes().to_vec()
+    }
+}
+
+impl Decryptable for Citizen {
+    fn decrypt(&self, data: &[u8]) -> Vec<u8> {
+        println!("Decrypting data for Citizen ID: {}", self.id);
+        // Giải mã dữ liệu bằng cách loại bỏ khóa bảo mật
+        let data_str = String::from_utf8_lossy(data);
+        let decrypted_data = data_str.replace("SECRET_KEY", "");
+        decrypted_data.as_bytes().to_vec()
+    }
+}
+
+impl Loggable for Citizen {
+    fn log(&self, message: &str) {
+        println!("Citizen Log [ID: {}]: {}", self.id, message);
+    }
+}
+
+impl Verifiable for Citizen {
+    fn re_verify(&self) -> bool {
+        // Xác minh lại tính toàn vẹn của dữ liệu
+        if self.age > 0 && self.age < 150 {
+            println!("Citizen ID {} verified successfully.", self.id);
+            true
+        } else {
+            println!("Citizen ID {} failed verification.", self.id);
+            false
+        }
+    }
+}
+
+impl Trackable for Citizen {
+    fn track(&self) {
+        println!("Tracking Citizen ID: {}", self.id);
+    }
+}
+```
+
+### 2. Triển khai cho `Record`
+
+```rust
+impl Encryptable for Record {
+    fn encrypt(&self) -> Vec<u8> {
+        println!("Encrypting Record ID: {}", self.record_id);
+        let encrypted_data = base64::encode(&self.details) + "SECRET_KEY";
+        encrypted_data.as_bytes().to_vec()
+    }
+}
+
+impl Decryptable for Record {
+    fn decrypt(&self, data: &[u8]) -> Vec<u8> {
+        println!("Decrypting Record ID: {}", self.record_id);
+        let data_str = String::from_utf8_lossy(data);
+        let decrypted_data = data_str.replace("SECRET_KEY", "");
+        decrypted_data.as_bytes().to_vec
+
+()
+    }
+}
+
+impl Loggable for Record {
+    fn log(&self, message: &str) {
+        println!("Record Log [ID: {}]: {}", self.record_id, message);
+    }
+}
+
+impl Verifiable for Record {
+    fn re_verify(&self) -> bool {
+        match self.status {
+            Status::Approved | Status::Pending | Status::Rejected => {
+                println!("Record ID {} verified successfully.", self.record_id);
+                true
+            }
+            _ => {
+                println!("Record ID {} failed verification.", self.record_id);
+                false
+            }
+        }
+    }
+}
+
+impl Trackable for Record {
+    fn track(&self) {
+        println!("Tracking Record ID: {}", self.record_id);
+    }
+}
+
+impl Approvable for Record {
+    fn approve(&mut self) {
+        self.status = Status::Approved;
+        println!("Record with ID {} has been approved.", self.record_id);
+    }
+}
+
+impl Rejectable for Record {
+    fn reject(&mut self) {
+        self.status = Status::Rejected;
+        println!("Record with ID {} has been rejected.", self.record_id);
+    }
+}
+```
+
+### 3. Triển khai cho `Agent`
+
+```rust
+impl Loggable for Agent {
+    fn log(&self, message: &str) {
+        println!("Log: {}", message);
+    }
+}
+
+impl Validatable for Request {
+    fn validate(&self) -> bool {
+        true
+    }
+}
+
+impl Deduplicatable for Request {
+    fn deduplicate(&self) -> Self {
+        self.clone()
+    }
+}
+
+impl Sanitizable for Request {
+    fn sanitize(&self) -> Self {
+        self.clone()
+    }
+}
+
+impl Authenticatable for Agent {
+    fn authenticate(&self, credentials: &str) -> bool {
+        // Xác thực lần thứ nhất với mật khẩu
+        if credentials != "valid_password" {
+            println!("First level authentication failed.");
+            return false;
+        }
+        // Xác thực lần thứ hai với OTP hoặc MFA
+        let otp = self.generate_otp();
+        if otp != "123456" {
+            println!("Second level authentication failed.");
+            return false;
+        }
+        println!("Authentication successful.");
+        true
+    }
+
+    fn generate_otp(&self) -> String {
+        // Giả lập việc tạo OTP (thực tế cần tích hợp với dịch vụ OTP)
+        "123456".to_string()
+    }
+}
+
+impl Prioritizable for Agent {
+    fn prioritize(&self, level: u8) {
+        println!("Priority set to {}", level);
+    }
+}
+
+impl Filterable for Request {
+    fn filter(&self, criteria: &str) -> Self {
+        self.clone()
+    }
+}
+
+impl Searchable for Request {
+    fn search(&self, query: &str) -> Vec<Self> {
+        vec![self.clone()]
+    }
+}
+
+impl Indexable for Request {
+    fn index(&self) -> usize {
+        0
+    }
+}
+
+impl Serializable for Request {
+    fn serialize(&self) -> Vec<u8> {
+        self.data.clone()
+    }
+}
+
+impl Deserializable for Request {
+    fn deserialize(data: &[u8]) -> Self {
+        Request {
+            id: 0,
+            data: data.to_vec(),
+        }
+    }
+}
+
+impl Encryptable for Request {
+    fn encrypt(&self) -> Vec<u8> {
+        base64::encode(&self.data).as_bytes().to_vec()
+    }
+}
+
+impl Decryptable for Request {
+    fn decrypt(&self, data: &[u8]) -> Vec<u8> {
+        base64::decode(data).expect("Failed to decrypt data")
+    }
+}
+
+impl Compressable for Request {
+    fn compress(&self) -> Vec<u8> {
+        self.data.clone()
+    }
+}
+
+impl Decompressable for Request {
+    fn decompress(&self, data: &[u8]) -> Vec<u8> {
+        data.to_vec()
+    }
+}
+
+impl Cachable for Agent {
+    fn cache(&self) {
+        println!("Request cached");
+    }
+}
+
+impl Trackable for Agent {
+    fn track(&self) {
+        println!("Tracking process in Agent.");
+    }
+}
+
+impl Throttlable for Agent {
+    fn throttle(&self) {
+        println!("Request throttled");
+    }
+}
+
+impl Scalable for Agent {
+    fn scale(&self, factor: u32) {
+        println!("Scaled by factor {}", factor);
+    }
+}
+
+impl Observable for Agent {
+    fn observe(&self) {
+        println!("Observing process");
+    }
+}
+
+impl Timeoutable for Agent {
+    fn set_timeout(&self, duration: u64) {
+        println!("Timeout set to {} seconds", duration);
+    }
+}
+
+impl Reversible for Agent {
+    fn reverse(&self) -> Self {
+        self.clone()
+    }
+}
+
+impl Recoverable for Agent {
+    fn recover(&self) -> Self {
+        self.clone()
+    }
+}
+
+impl Persistable for Agent {
+    fn persist(&self) {
+        println!("State persisted");
+    }
+}
+
+impl Eventable<Event<String>> for Agent {
+    fn register_event(&self, event: Event<String>) {
+        println!("Event registered: ID: {}, Payload: {}", event.id, event.payload);
+        self.log(&format!("Event with ID: {} registered.", event.id));
+    }
+}
+
+impl Auditable for Agent {
+    fn audit(&self) {
+        println!("Audit completed");
+    }
+}
+
+impl Configurable for Agent {
+    fn configure(&self, options: &str) {
+        println!("Configured with options: {}", options);
+    }
+}
+
+impl Extendable for Agent {
+    fn extend(&self) {
+        println!("Extended capabilities");
+    }
+}
+
+impl Aggregatable for Agent {
+    fn aggregate(&self, _other: &Self) -> Self {
+        self.clone()
+    }
+}
+
+impl Customizable for Agent {
+    fn customize(&self, options: &str) {
+        println!("Customized with options: {}", options);
+    }
+}
+
+impl Modularizable for Agent {
+    fn organize_modules(&self) {
+        println!("Modules organized");
+    }
+}
+
+impl Governable for Agent {
+    fn enforce_policies(&self) {
+        println!("Policies enforced");
+    }
+}
+
+impl Isolatable for Agent {
+    fn isolate(&self) {
+        println!("Process isolated");
+    }
+}
+
+impl Traceable for Agent {
+    fn trace(&self) {
+        println!("Tracing process");
+    }
+}
+
+impl Notifiable for Agent {
+    fn notify(&self) {
+        println!("Notification sent");
+    }
+}
+
+impl Schedulable for Agent {
+    fn schedule(&self, time: u64) {
+        println!("Task scheduled at {}", time);
+    }
+}
+
+impl Redactable for Agent {
+    fn redact(&self) {
+        println!("Information redacted");
+    }
+}
+
+impl Notarizable for Agent {
+    fn notarize(&self) {
+        println!("Data notarized");
+    }
+}
+
+impl Verifiable for Agent {
+    fn re_verify(&self) -> bool {
+        println!("Verification in progress by Agent.");
+        true
+    }
+}
+
+impl Archivable for Agent {
+    fn archive(&self) {
+        println!("Data archived");
+    }
+}
+
+impl Attachable for Agent {
+    fn attach(&self, data: &str) {
+        println!("Data attached: {}", data);
+    }
+}
+
+impl Visualizable for Agent {
+    fn visualize(&self) -> String {
+        "Visualization complete".into()
+    }
+}
+
+impl Replicable for Agent {
+    fn replicate(&self) -> Self {
+        self.clone()
+    }
+}
+
+impl Expandable for Agent {
+    fn expand(&self) {
+        println!("System expanded");
+    }
+}
+```
+
+### 4. Triển khai cho các vai trò `Chief`, `Deputy`, và `Officer`
+
+#### Vai trò `Chief`
+
+```rust
+impl Manageable for Chief {
+    fn approve(&self, request: &Request) -> bool {
+        self.log("Chief approving request...");
+        request.validate()
+    }
+
+    fn amend(&self, record_id: u64, changes: &str) {
+        self.log(&format!("Chief amending record {} with changes: {}", record_id, changes));
+    }
+
+    fn issue(&self, details: &str) {
+        self.log(&format!("Chief issuing new registration: {}", details));
+    }
+
+    fn reissue(&self, document_id: u64) {
+        self.log(&format!("Chief reissuing document ID: {}", document_id));
+    }
+}
+
+impl Loggable for Chief {
+    fn log(&self, message: &str) {
+        println!("Chief Log: {}", message);
+    }
+}
+
+impl Verifiable for Chief {
+    fn re_verify(&self) -> bool {
+        println!("Chief verifying the process.");
+        true
+    }
+}
+```
+
+#### Vai trò `Deputy`
+
+```rust
+impl Manageable for Deputy {
+    fn approve(&self, request: &Request) -> bool {
+        self.log("Deputy approving request...");
+        request.validate()
+    }
+
+    fn amend(&self, record_id: u64, changes: &str) {
+        self.log(&format!("Deputy amending record {} with changes: {}", record_id, changes));
+    }
+
+    fn issue(&self, details: &str) {
+        self.log(&format!("Deputy issuing new registration: {}", details));
+    }
+
+    fn reissue(&self, document_id: u64) {
+        self.log(&format!("Deputy reissuing document ID: {}", document_id));
+    }
+}
+
+impl Loggable for Deputy {
+    fn log(&self, message: &str) {
+        println!("Deputy Log: {}", message);
+    }
+}
+
+impl Verifiable for Deputy {
+    fn re_verify(&self) -> bool {
+        println!("Deputy verifying the process.");
+        true
+    }
+}
+```
+
+#### Quản lý phân quyền cho các vai trò
+
+```rust
+impl Grantable for Chief {
+    fn grant(&self, officer_id: u64, access_level: u8) {
+        println!("Chief grants access level {} to Officer ID: {}", access_level, officer_id);
+    }
+
+    fn edit(&self, officer_id: u64, new_role: &str) {
+        println!("Chief edits role of Officer ID: {} to {}", officer_id, new_role);
+    }
+}
+
+impl Grantable for Deputy {
+    fn grant(&self, officer_id: u64, access_level: u8) {
+        println!("Deputy grants access level {} to Officer ID: {}", access_level, officer_id);
+    }
+
+    fn edit(&self, officer_id: u64, new_role: &str) {
+        println!("Deputy edits role of Officer ID: {} to {}", officer_id, new_role);
+    }
+}
+```
+
+### 5. Quy trình xử lý yêu cầu
+
+```rust
+impl Agent {
+    fn process_request(&self, request: &Request) {
+        self.log("Starting request processing...");
+
+        // Xác thực yêu cầu trước khi xử lý
+        if !self.authenticate("valid_password") {
+            self.log("Authentication failed. Request terminated.");
+            return;
+        }
+
+        // Bắt đầu theo dõi quá trình
+        self.track();
+
+        // Mã hóa dữ liệu yêu cầu
+        let encrypted_data = request.encrypt();
+        self.log("Request data encrypted.");
+
+        // Nén dữ liệu
+        let compressed_data = request.compress();
+        self.log("Request data compressed.");
+
+        // Xác minh dữ liệu
+        if !self.re_verify() {
+            self.log("Verification failed. Request terminated.");
+            return;
+        }
+
+        // Xử lý yêu cầu và cập nhật cơ sở dữ liệu
+        self.persist();
+        self.log("Request processed and persisted.");
+
+        // Giải mã và giải nén dữ liệu khi cần thiết
+        let decrypted_data = request.decrypt(&encrypted_data);
+        self.log("Request data decrypted.");
+        let decompressed_data = request.decompress(&compressed_data);
+        self.log("Request data decompressed.");
+
+        // Lưu trữ trạng thái cuối cùng
+        self.log("Request processing completed successfully.");
+    }
+
+    fn validate_and_process(&self, request: &Request) {
+        if !request.validate() {
+            self.log("Validation failed. Request terminated.");
+            return;
+        }
+
+        // Xác thực dữ liệu
+        if !self.re_verify() {
+            self.log("Verification failed. Request terminated.");
+            return;
+        }
+
+        // Tiếp tục xử lý nếu xác thực thành công
+        self.process_request(request);
+    }
+}
+```
+
+## IV. Sơ đồ tuần tự hóa
+
+```mermaid
+sequenceDiagram
+    participant USER as User
+    participant WPA as Workflow Processing Agent
+    participant Eventable as Eventable<Subscriber, Publisher>
+    participant Queueable as Queueable<Event>
+    participant Citizen as Citizen
+    participant Record as Record
+    participant Chief as Chief
+    participant Deputy as Deputy
+    participant Officer as Officer
+    participant Database as Database
+    participant Notification as Notification System
+    participant Encryptable as Encryptable
+    participant Decryptable as Decryptable
+    participant Loggable as Loggable
+    participant Validatable as Validatable
+    participant Deduplicatable as Deduplicatable
+    participant Sanitizable as Sanitizable
+    participant Authenticatable as Authenticatable
+    participant Prioritizable as Prioritizable
+    participant Filterable as Filterable
+    participant Searchable as Searchable
+    participant Indexable as Indexable
+    participant Serializable as Serializable
+    participant Deserializable as Deserializable
+    participant Compressable as Compressable
+    participant Decompressable as Decompressable
+    participant Cachable as Cachable
+    participant Trackable as Trackable
+    participant Throttlable as Throttlable
+    participant Scalable as Scalable
+    participant Observable as Observable
+    participant Timeoutable as Timeoutable
+    participant Reversible as Reversible
+    participant Recoverable as Recoverable
+    participant Persistable as Persistable
+    participant Auditable as Auditable
+    participant Configurable as Configurable
+    participant Extendable as Extendable
+    participant Aggregatable as Aggregatable
+    participant Customizable as Customizable
+    participant Modularizable as Modularizable
+    participant Governable as Governable
+    participant Isolatable as Isolatable
+    participant Traceable as Traceable
+    participant Notifiable as Notifiable
+    participant Schedulable as Schedulable
+    participant Redactable as Redactable
+    participant Notarizable as Notarizable
+    participant Verifiable as Verifiable
+    participant Archivable as Archivable
+    participant Attachable as Attachable
+    participant Visualizable as Visualizable
+    participant Replicable as Replicable
+    participant Expandable as Expandable
+
+    USER->>WPA: Send request to WPA
+    WPA->>Loggable: Log request (Loggable)
+    WPA->>Validatable: Validate request (Validatable)
+    WPA->>Deduplicatable: Deduplicate request (Deduplicatable)
+    WPA->>Sanitizable: Sanitize data (Sanitizable)
+    WPA->>Authenticatable: Authenticate user (Authenticatable)
+    WPA->>Prioritizable: Prioritize request (Prioritizable)
+    WPA->>Filterable: Apply filters to request data (Filterable)
+    WPA->>Searchable: Search and retrieve related data (Searchable)
+    WPA->>Indexable: Index data for fast access (Indexable)
+    WPA->>Serializable: Serialize request data (Serializable)
+    WPA->>Encryptable: Encrypt data (Encryptable)
+    WPA->>Compressable: Compress data (Compressable)
+    WPA->>Cachable: Cache request (Cachable)
+    WPA->>Trackable: Track request (Trackable)
+    WPA->>Throttlable: Throttle request (Throttlable)
+    WPA->>Scalable: Scale resources as needed (Scalable)
+    WPA->>Observable: Observe process (Observable)
+    WPA->>Timeoutable: Set timeout for request (Timeoutable)
+    WPA->>Reversible: Reverse request if needed (Reversible)
+    WPA->>Recoverable: Recover from errors (Recoverable)
+    WPA->>Persistable: Persist request state (Persistable)
+    WPA->>Eventable: Register Event (Eventable<Subscriber, Publisher>)
+    Eventable->>Queueable: Queue Event (Queueable<Event>)
+    Queueable->>Monitorable: Monitor Event processing (Monitorable)
+    Queueable->>Resumable: Resume Event processing (Resumable)
+    Queueable->>WPA: Dequeue Event
+    WPA->>Citizen: Process Citizen data (Encryptable, Decryptable)
+    WPA->>Record: Process Record data (Encryptable, Decryptable)
+    WPA->>Database: Save state and update records
+    Database-->>WPA: Return processing result
+    WPA->>Chief: Notify Chief for approval (Notifiable)
+    Chief->>Loggable: Log approval action (Loggable)
+    Chief->>Database: Update approval status in Database
+    WPA->>Deputy: Notify Deputy for further processing (Notifiable)
+    Deputy->>Loggable: Log deputy action (Loggable)
+    Deputy->>Database: Update status in Database
+    WPA->>Officer: Assign tasks to Officer (Schedulable)
+    Officer->>Loggable: Log officer actions (Loggable)
+    Officer->>Database: Update officer tasks in Database
+    WPA->>Notification: Publish final notification to user
+    Notification-->>USER: Notify User of Success
+```
+
+## V. Tổng kết
+
+Hệ thống binary của Cục Cảnh sát quản lý hành chính về trật tự xã hội được thiết kế với một kiến trúc bảo mật cao, quản lý chặt chẽ các quyền truy cập và khả năng theo dõi toàn diện mọi hành động. Với các thành phần và logic đã triển khai, hệ thống này không chỉ đáp ứng tốt các yêu cầu nghiệp vụ mà còn đảm bảo tính an toàn và hiệu suất cao, sẵn sàng cho việc mở rộng và tích hợp thêm các tính năng mới trong tương lai.
+
+---
+
+# **Hướng dẫn cho Principal Staff Engineer**
+
+**Mục tiêu:** Nắm bắt toàn diện hệ thống hiện tại và cung cấp các prompts yêu cầu **GPT-4o** để cải tiến mã nguồn hệ thống một cách chính xác, tăng cường bảo mật, tối ưu hóa hiệu suất và đảm bảo tính mở rộng.
+
+**Các bước tiếp theo:**
+
+1. **Phân tích mã nguồn hiện tại:** Xem xét các phần mã đã được triển khai, tập trung vào các trait và cách thức chúng được tích hợp vào hệ thống.
+2. **Đánh giá tính bảo mật:** Đảm bảo rằng các phương thức mã hóa, xác thực, và bảo mật được triển khai đầy đủ và chính xác.
+3. **Đề xuất cải tiến:** Đưa ra các đề xuất cải tiến về mã hóa, bảo mật, hoặc hiệu suất dựa trên phân tích và đánh giá.
+4. **Tạo prompts chi tiết cho **GPT-4o:** Cung cấp các prompts cụ thể để **GPT-4o** triển khai các cải tiến hoặc sửa chữa mã nguồn.
+5. **Kiểm tra và xác nhận:** Sau khi **GPT-4o** thực hiện các cải tiến, kiểm tra mã nguồn để đảm bảo các thay đổi không gây ra lỗi mới hoặc lỗ hổng bảo mật.
+6. **Tài liệu hóa và lưu trữ:** Cập nhật tài liệu kỹ thuật với các thay đổi mới và lưu trữ để phục vụ cho việc bảo trì và nâng cấp hệ thống trong tương lai.
+```
+
+---
+
+Tệp tin markdown này cung cấp một đặc tả kỹ thuật toàn diện cho hệ thống, giúp **Principal Staff Engineer** nắm rõ tất cả các thành phần và logic hiện
+
+ tại để hướng dẫn **GPT-4o** thực hiện các cải tiến cần thiết.
