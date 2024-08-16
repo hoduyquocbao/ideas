@@ -1,4 +1,4 @@
-Dưới đây là đặc tả kỹ thuật hoàn chỉnh cho hệ thống binary của Cục Cảnh sát quản lý hành chính về trật tự xã hội, bao gồm mã nguồn và sơ đồ tuần tự hóa. Nội dung này được định dạng dưới dạng markdown để **GPT Principal Staff Engineer** có thể nắm bắt toàn diện về hệ thống và đưa ra các prompts chính xác cho **GPT-4o** nhằm cải tiến mã một cách chính xác và an toàn hơn.
+Dưới đây là đặc tả kỹ thuật hoàn chỉnh cho hệ thống binary của Cục Cảnh sát quản lý hành chính về trật tự xã hội, bao gồm mã nguồn và sơ đồ tuần tự hóa. Nội dung này được định dạng dưới dạng markdown để **GPT Principal Staff Engineer** có thể nắm bắt toàn diện về hệ thống và đưa ra các prompts chính xác cho **ChatGPT** nhằm cải tiến mã một cách chính xác và an toàn hơn.
 
 ```markdown
 # Đặc tả kỹ thuật hệ thống binary của Cục Cảnh sát quản lý hành chính về trật tự xã hội
@@ -385,9 +385,7 @@ impl Decryptable for Record {
         println!("Decrypting Record ID: {}", self.record_id);
         let data_str = String::from_utf8_lossy(data);
         let decrypted_data = data_str.replace("SECRET_KEY", "");
-        decrypted_data.as_bytes().to_vec
-
-()
+        decrypted_data.as_bytes().to_vec()
     }
 }
 
@@ -1008,6 +1006,4 @@ Hệ thống binary của Cục Cảnh sát quản lý hành chính về trật 
 
 ---
 
-Tệp tin markdown này cung cấp một đặc tả kỹ thuật toàn diện cho hệ thống, giúp **Principal Staff Engineer** nắm rõ tất cả các thành phần và logic hiện
-
- tại để hướng dẫn **GPT-4o** thực hiện các cải tiến cần thiết.
+Tệp tin markdown này cung cấp một đặc tả kỹ thuật toàn diện cho hệ thống, giúp **Principal Staff Engineer** nắm rõ tất cả các thành phần và logic hiện tại để hướng dẫn **GPT-4o** thực hiện các cải tiến cần thiết.
