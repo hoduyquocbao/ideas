@@ -1,3 +1,4 @@
+```md
 thiết kế một cấu trúc thư mục và các khái niệm cốt lõi cho dự án editor SVG sử dụng TypeScript và WGPU, tập trung vào hiệu suất cao, zero-copy, và an toàn luồng với Web Workers, đồng thời tuân thủ các quy tắc đặt tên nghiêm ngặt mà bạn đã đề ra, được điều chỉnh theo triết lý BEARD.
 
 **Tổng quan Triết lý BEARD Áp dụng:**
